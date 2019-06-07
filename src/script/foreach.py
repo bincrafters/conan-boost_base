@@ -24,7 +24,7 @@ class ForEach(Main):
     def __init_parser__(self, parser):
         parser.add_argument(
             '++version',
-            help='The version of Boost to create.',
+            help='The version of Boost to process.',
             required=True)
         parser.add_argument(
             '++repo-dir',
@@ -82,11 +82,16 @@ class ForEach(Main):
             for package in package_deps.keys():
                 package_deps[package] -= group
 
+        os.environ['CONAN_VERBOSE_TRACEBACK'] = '1'
+
+        # We can now go through the groups in the DAG order.
+        self.foreach(groups)
+
+    def foreach(self, groups):
         # We can now go through the groups in the DAG order. But do it by
         # some method calls to allow customizing any part of the
         # process.
         with PushDir(self.args.repo_dir) as _:
-            os.environ['CONAN_VERBOSE_TRACEBACK'] = '1'
             self.groups_pre(groups)
             self.groups_foreach(groups)
             self.groups_post(groups)

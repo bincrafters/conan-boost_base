@@ -42,4 +42,19 @@ The license for all files contained in this GIT repository are defined in the [L
 
     ~/.conan/data/<pkg_name>/<pkg_version>/bincrafters/export/LICENSE.md 
 
-	
+## Boost Modular Packages
+
+This is the base class, as a python requires package, for the Boost modular packages. It contains almost all the packaging logic for all supported versions of Boost.
+
+### Contents
+
+* `src/data` -- Contains the generated information for the Boost packages as JSON data for each version.
+* `script` -- Contains generation and build scripts for creating and maintaining the packages as one development unit.
+    * `package_data_gen.py` -- Generates the `package-data-boost-<version>.json` data.
+    * `create_all.py` -- Invokes `conan create ...` for each package in dependency order.
+    * `clone_conan_boost.py` -- Git clones the needed for a given version.
+
+### Release
+
+Generating the packages for a modular Boost release is complex. But hopefully
+the scripts here make it as simple as possible.
