@@ -11,33 +11,40 @@ from bls.util import Main, PushDir
 from bls.lib_data import LibraryData
 
 
+script_dir = os.path.dirname(os.path.realpath(__file__))
+
+
 class PackageGen(Main):
     '''
     Generates Boost packages for a release.
     '''
 
     def __init_parser__(self, parser):
+        default_bin_dir = os.path.join(
+            os.path.dirname(os.path.dirname(script_dir)),
+            'build')
+        default_out_dir = os.path.join(
+            os.path.dirname(script_dir),
+            'data')
         parser.add_argument(
             '++version',
             help='The version of Boost to generate packages for.')
         parser.add_argument(
             '++out-dir',
-            help='Root directory to output the generated packages.')
-        parser.add_argument('++bin-dir')
+            help='Root directory to output the generated packages.',
+            default=default_out_dir)
+        parser.add_argument('++bin-dir', default=default_bin_dir)
         parser.add_argument('++local', action='store_true')
         parser.add_argument('++build-data', action='store_true')
 
     def __run__(self):
         bin_dir = None
         boost_root_dir = None
-        script_dir = None
         data_dir = None
 
         with PushDir(self.args.bin_dir) as dir:
             bin_dir = dir
             boost_root_dir = os.path.join(bin_dir, 'boost_root')
-        with PushDir('src', 'script') as dir:
-            script_dir = dir
         with PushDir(bin_dir, 'data') as dir:
             data_dir = dir
 
