@@ -10,17 +10,21 @@ Bincrafters packages can be found in the following public Conan repository:
 
 [Bincrafters Public Conan Repository on Bintray](https://bintray.com/bincrafters/public-conan)
 
-*Note: You can click the "Set Me Up" button on the Bintray page above for instructions on using packages from this repository.*
+*Note: You can click the "Set Me Up" button on the Bintray page above for
+instructions on using packages from this repository.*
 
 ## Issues
 
-If you wish to report an issue or make a request for a Bincrafters package, please do so here:  
+If you wish to report an issue or make a request for a Bincrafters package,
+please do so here:  
 
 [Bincrafters Community Issues](https://github.com/bincrafters/community/issues)
 
 ## General Information
 
-This GIT repository is managed by the Bincrafters team and holds files related to Conan.io.  For detailed information about Bincrafters and Conan.io, please visit the following resources: 
+This GIT repository is managed by the Bincrafters team and holds files related
+to Conan.io.  For detailed information about Bincrafters and Conan.io, please
+visit the following resources: 
 
 [Bincrafters Wiki - Common README](https://github.com/bincrafters/community/wiki/Common-README.md)
 
@@ -30,13 +34,18 @@ This GIT repository is managed by the Bincrafters team and holds files related t
 
 ## License Information
 
-The license for all files contained in this GIT repository are defined in the [LICENSE.md](LICENSE.md) file in this repository.  The licenses included with all Conan packages published by Bincrafters can be found in the Conan package directories in the following locations, relative to the Conan Cache root (`~/.conan` by default): 
+The license for all files contained in this GIT repository are defined in the
+[LICENSE.md](LICENSE.md) file in this repository.  The licenses included with
+all Conan packages published by Bincrafters can be found in the Conan package
+directories in the following locations, relative to the Conan Cache root
+(`~/.conan` by default): 
 
 ### License(s) for packaged software: 
 
     ~/.conan/data/<pkg_name>/<pkg_version>/bincrafters/package/<random_package_id>/license/<LICENSE_FILES_HERE>
 
-*Note :   The most common filenames for OSS licenses are `LICENSE` AND `COPYING` without file extensions.*
+*Note :   The most common filenames for OSS licenses are `LICENSE` AND
+`COPYING` without file extensions.*
 	
 ### License for Bincrafters recipe: 
 
@@ -44,7 +53,9 @@ The license for all files contained in this GIT repository are defined in the [L
 
 ## Boost Modular Packages
 
-This is the base class, as a python requires package, for the Boost modular packages. It contains almost all the packaging logic for all supported versions of Boost.
+This is the base class, as a python requires package, for the Boost modular
+packages. It contains almost all the packaging logic for all supported
+versions of Boost.
 
 ### Contents
 
@@ -98,5 +109,25 @@ to obtain Boost libraries and to inspect them to generate the package
 dependency information.
 
 ```
-./src/script/package_data_gen.py ++version=1.70.0
+<conan_base_root>/src/script/package_data_gen.py ++version=1.70.0
 ```
+
+That will download Boost from GitHub, build the introspection tools, and
+end up generating a `conan-boost_base/src/data/package-data-boost-1.70.0.json`
+file.
+
+#### Existing Boost Packages
+
+Next we need to fetch the current set of packages from GitHub so that we can
+add the next release.
+
+```
+<conan_base_root>/src/script/clone_conan_boost.py ++repo-dir=./conan-boost ++version=1.70.0
+```
+
+That command creates a `conan-boost` subdirectory in the current directory,
+initializes an empty git repo in that dir, and adds all the Boost modular
+packages as submodules (cloning them locally in the process).
+
+#### New Boost Packages
+

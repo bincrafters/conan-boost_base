@@ -1,0 +1,45 @@
+variables:
+  BOOST_VERSION: 1.70.0
+
+trigger:
+  branches:
+    include:
+      - testing/1.*
+
+stages:
+- stage: 'Create Packages'
+  jobs:
+  - job: 'Linux'
+    pool:
+      vmImage: 'ubuntu-16.04'
+    strategy:
+      matrix:
+        GCC 9:
+          CXX: g++-9
+          PACKAGES: g++-9
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x'
+    - bash: |
+          set -e
+          uname -a
+          sudo -E apt-add-repository -y "ppa:ubuntu-toolchain-r/test"
+          if test -n "${LLVM_REPO}" ; then
+            wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+            sudo -E apt-add-repository "deb http://apt.llvm.org/xenial/ ${LLVM_REPO} main"
+          fi
+          sudo -E apt-get update
+          sudo -E apt-get -yq --no-install-suggests --no-install-recommends install ${PACKAGES}
+          pip3 install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
+      displayName: 'Install'
+    - bash: |
+          set -e
+          ./src/script/clone_conan_boost.py "++repo-dir=${HOME}/conan-boost" "++version=${BOOST_VERSION}"
+          pushd "${HOME}/conan-boost"
+          git submodule foreach git checkout "testing/${BOOST_VERSION}"
+      displayName: 'Clone'
+    - bash: |
+          set -e
+          ./src/script/create_all.py "++repo-dir=${HOME}/conan-boost" "++version=${BOOST_VERSION}"
+      displayName: 'Create'
