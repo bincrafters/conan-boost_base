@@ -7,7 +7,7 @@ trigger:
       - testing/1.*
 
 stages:
-- stage: 'Create Packages'
+- stage: Create
   jobs:
   - job: 'Linux'
     pool:
