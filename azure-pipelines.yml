@@ -17,6 +17,7 @@ stages:
         GCC 9:
           CXX: g++-9
           PACKAGES: g++-9
+          CONAN_SETTINGS_OPT: -s compiler=gcc -s compiler.gcc.version=9
     steps:
     - task: UsePythonVersion@0
       inputs:
@@ -42,5 +43,5 @@ stages:
       displayName: 'Clone'
     - bash: |
           set -e
-          ./src/script/create_all.py "++repo-dir=${HOME}/conan-boost" "++version=${BOOST_VERSION}"
+          ./src/script/create_all.py "++repo-dir=${HOME}/conan-boost" "++version=${BOOST_VERSION}" ${CONAN_SETTINGS_OPT}
       displayName: 'Create'
