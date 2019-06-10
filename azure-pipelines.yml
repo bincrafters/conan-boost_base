@@ -19,7 +19,7 @@ stages:
           PACKAGES: g++-9
           CONAN_SETTINGS_OPT: -s compiler=gcc -s compiler.gcc.version=9
           CONTAINER: ubuntu:18.04
-    container: $[ wariables['CONTAINER'] ]
+    container: $[ variables['CONTAINER'] ]
     steps:
     - bash: |
           set -e
