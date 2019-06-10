@@ -1,5 +1,6 @@
 variables:
   BOOST_VERSION: 1.70.0
+  # SUDO: ${SUDO}
 
 trigger:
   branches:
@@ -24,14 +25,14 @@ stages:
     - bash: |
           set -e
           uname -a
-          sudo -E apt-add-repository -y "ppa:ubuntu-toolchain-r/test"
+          ${SUDO} apt-add-repository -y "ppa:ubuntu-toolchain-r/test"
           if test -n "${LLVM_REPO}" ; then
             wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-            sudo -E apt-add-repository "deb http://apt.llvm.org/xenial/ ${LLVM_REPO} main"
+            ${SUDO} apt-add-repository "deb http://apt.llvm.org/xenial/ ${LLVM_REPO} main"
           fi
-          sudo -E apt-get update
-          sudo -E apt-get -yq --no-install-suggests --no-install-recommends install ${PACKAGES}
-          sudo -E apt-get -yq --no-install-suggests --no-install-recommends install libsqlite3-dev
+          ${SUDO} apt-get update
+          ${SUDO} apt-get -yq --no-install-suggests --no-install-recommends install ${PACKAGES}
+          ${SUDO} apt-get -yq --no-install-suggests --no-install-recommends install libsqlite3-dev
       displayName: 'Install'
     - task: UsePythonVersion@0
       inputs:
