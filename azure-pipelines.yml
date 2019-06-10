@@ -1,6 +1,5 @@
 variables:
   BOOST_VERSION: 1.70.0
-  # SUDO: ${SUDO}
 
 trigger:
   branches:
@@ -19,20 +18,18 @@ stages:
           CXX: g++-9
           PACKAGES: g++-9
           CONAN_SETTINGS_OPT: -s compiler=gcc -s compiler.gcc.version=9
-          CONTAINER: ubuntu:18.04
-    container: $[ variables['CONTAINER'] ]
     steps:
     - bash: |
           set -e
           uname -a
-          ${SUDO} apt-add-repository -y "ppa:ubuntu-toolchain-r/test"
+          sudo -E apt-add-repository -y "ppa:ubuntu-toolchain-r/test"
           if test -n "${LLVM_REPO}" ; then
             wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-            ${SUDO} apt-add-repository "deb http://apt.llvm.org/xenial/ ${LLVM_REPO} main"
+            sudo -E apt-add-repository "deb http://apt.llvm.org/xenial/ ${LLVM_REPO} main"
           fi
-          ${SUDO} apt-get update
-          ${SUDO} apt-get -yq --no-install-suggests --no-install-recommends install ${PACKAGES}
-          ${SUDO} apt-get -yq --no-install-suggests --no-install-recommends install libsqlite3-dev
+          sudo -E apt-get update
+          sudo -E apt-get -yq --no-install-suggests --no-install-recommends install ${PACKAGES}
+          sudo -E apt-get -yq --no-install-suggests --no-install-recommends install libsqlite3-dev
       displayName: 'Install'
     - task: UsePythonVersion@0
       inputs:
