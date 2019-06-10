@@ -18,10 +18,9 @@ stages:
           CXX: g++-9
           PACKAGES: g++-9
           CONAN_SETTINGS_OPT: -s compiler=gcc -s compiler.gcc.version=9
+          CONTAINER: ubuntu:18.04
+    container: $[ wariables['CONTAINER'] ]
     steps:
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.x'
     - bash: |
           set -e
           uname -a
@@ -33,10 +32,16 @@ stages:
           sudo -E apt-get update
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install ${PACKAGES}
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install libsqlite3-dev
+      displayName: 'Install'
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x'
+    - bash: |
+          set -e
           pip3 install --upgrade pysqlite
           pip3 install --upgrade conan
           pip3 install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
-      displayName: 'Install'
+      displayName: 'PIP'
     - bash: |
           set -e
           ./src/script/clone_conan_boost.py "++repo-dir=${HOME}/conan-boost" "++version=${BOOST_VERSION}"
