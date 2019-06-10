@@ -33,8 +33,9 @@ stages:
           sudo -E apt-get update
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install ${PACKAGES}
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install libsqlite3-dev
-          pip3 install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
+          pip3 install --upgrade pysqlite
           pip3 install --upgrade conan
+          pip3 install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
       displayName: 'Install'
     - bash: |
           set -e
