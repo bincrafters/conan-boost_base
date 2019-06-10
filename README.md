@@ -124,10 +124,27 @@ add the next release.
 ```
 <conan_base_root>/src/script/clone_conan_boost.py ++repo-dir=./conan-boost ++version=1.70.0
 ```
+*Note : There might be errors from the clone for the libraries that don't
+have existing repos in GitHub. It's safe to ignore those as we will need
+to create those later.*
 
 That command creates a `conan-boost` subdirectory in the current directory,
 initializes an empty git repo in that dir, and adds all the Boost modular
-packages as submodules (cloning them locally in the process).
+packages as submodules (cloning them locally in the process). Even though we
+now have the packages, they are not going to have the branches for the
+new release:
+
+```
+cd ./conan-boost
+git submodule foreach git checkout testing/1.69.0
+git submodule foreach git branch testing/1.70.0
+```
+
+That, first, checks out the previous revision to the one we are going to
+create. We usually want to use the previous release as the base, if it
+exists, as that will make for less likely changes. And the second `git`
+creates all the new release branches.
 
 #### New Boost Packages
 
+With every release comes the likelihood that new Boost libraries are added.
