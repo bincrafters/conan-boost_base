@@ -36,7 +36,6 @@ stages:
         versionSpec: '3.x'
     - bash: |
           set -e
-          pip3 install --upgrade pysqlite
           pip3 install --upgrade conan
           pip3 install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
       displayName: 'PIP'
