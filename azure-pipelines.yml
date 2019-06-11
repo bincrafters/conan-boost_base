@@ -19,23 +19,11 @@ stages:
           PACKAGES: g++-9
           CONAN_SETTINGS_OPT: -s compiler=gcc -s compiler.gcc.version=9
     steps:
-    - bash: |
-          set -e
-          rm -rf $AGENT_TOOLSDIRECTORY/Python/2.7.16
-          rm -rf $AGENT_TOOLSDIRECTORY/Python/3.5.7
-          rm -rf $AGENT_TOOLSDIRECTORY/Python/3.7.3
-          azcopy --recursive \
-            --source https://vstsagenttools.blob.core.windows.net/tools/hostedtoolcache/linux/Python/3.7.2 \
-            --destination $AGENT_TOOLSDIRECTORY/Python/3.7.2
-          original_directory=$PWD
-          setups=$(find $AGENT_TOOLSDIRECTORY/Python -name setup.sh)
-          for setup in $setups; do
-              chmod +x $setup;
-              cd $(dirname $setup);
-              ./$(basename $setup);
-              cd $original_directory;
-          done;
-      displayName: 'Workaround: roll back Python versions'
+    - bash: |          
+          sudo add-apt-repository ppa:deadsnakes          
+          sudo apt-get update          
+          sudo apt-get install -y --no-install-recommends python3.8-dev python$(python.version)-distutils        
+      displayName: 'Install Python'
     - bash: |
           set -e
           uname -a
@@ -48,9 +36,6 @@ stages:
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install ${PACKAGES}
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install libsqlite3-dev
       displayName: 'Install'
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.x'
     - bash: |
           set -e
           pip3 install --upgrade conan
@@ -64,5 +49,5 @@ stages:
       displayName: 'Clone'
     - bash: |
           set -e
-          ./src/script/create_all.py "++repo-dir=${HOME}/conan-boost" "++version=${BOOST_VERSION}" ${CONAN_SETTINGS_OPT}
+          ./src/script/create_all.py "++trace" "++repo-dir=${HOME}/conan-boost" "++version=${BOOST_VERSION}" ${CONAN_SETTINGS_OPT}
       displayName: 'Create'
