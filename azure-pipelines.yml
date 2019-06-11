@@ -20,9 +20,9 @@ stages:
           CONAN_SETTINGS_OPT: -s compiler=gcc -s compiler.gcc.version=9
     steps:
     - bash: |          
-          sudo add-apt-repository ppa:deadsnakes          
-          sudo apt-get update          
-          sudo apt-get install -y --no-install-recommends python3.8-dev python3.8-distutils        
+          sudo -E add-apt-repository -y "ppa:deadsnakes"          
+          sudo -E apt-get update          
+          sudo -E apt-get install -y --no-install-recommends python3.7-dev python3.7-distutils
       displayName: 'Install Python'
     - bash: |
           set -e
