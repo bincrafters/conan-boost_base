@@ -20,21 +20,21 @@ stages:
           CONAN_SETTINGS_OPT: -s compiler=gcc -s compiler.gcc.version=9
     steps:
     - bash: |
-      set -e
-      rm -rf $AGENT_TOOLSDIRECTORY/Python/2.7.16
-      rm -rf $AGENT_TOOLSDIRECTORY/Python/3.5.7
-      rm -rf $AGENT_TOOLSDIRECTORY/Python/3.7.3
-      azcopy --recursive \
-        --source https://vstsagenttools.blob.core.windows.net/tools/hostedtoolcache/linux/Python/3.7.2 \
-        --destination $AGENT_TOOLSDIRECTORY/Python/3.7.2
-      original_directory=$PWD
-      setups=$(find $AGENT_TOOLSDIRECTORY/Python -name setup.sh)
-      for setup in $setups; do
-          chmod +x $setup;
-          cd $(dirname $setup);
-          ./$(basename $setup);
-          cd $original_directory;
-      done;
+          set -e
+          rm -rf $AGENT_TOOLSDIRECTORY/Python/2.7.16
+          rm -rf $AGENT_TOOLSDIRECTORY/Python/3.5.7
+          rm -rf $AGENT_TOOLSDIRECTORY/Python/3.7.3
+          azcopy --recursive \
+            --source https://vstsagenttools.blob.core.windows.net/tools/hostedtoolcache/linux/Python/3.7.2 \
+            --destination $AGENT_TOOLSDIRECTORY/Python/3.7.2
+          original_directory=$PWD
+          setups=$(find $AGENT_TOOLSDIRECTORY/Python -name setup.sh)
+          for setup in $setups; do
+              chmod +x $setup;
+              cd $(dirname $setup);
+              ./$(basename $setup);
+              cd $original_directory;
+          done;
       displayName: 'Workaround: roll back Python versions'
     - bash: |
           set -e
