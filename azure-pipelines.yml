@@ -48,11 +48,6 @@ stages:
               cd $original_directory;
           done;
       displayName: 'Workaround: roll back Python versions'
-    # - bash: |
-    #       sudo -E add-apt-repository -y "ppa:deadsnakes"
-    #       sudo -E apt-get update
-    #       sudo -E apt-get install -y --no-install-recommends python3.7-dev python3.7-distutils
-    #   displayName: 'Install Python'
     - bash: |
           set -e
           uname -a
@@ -62,7 +57,7 @@ stages:
             sudo -E apt-add-repository "deb http://apt.llvm.org/xenial/ ${LLVM_REPO} main"
           fi
           sudo -E apt-get update
-          sudo -E apt-get -yq --no-install-suggests --no-install-recommends install ${PACKAGES}
+          sudo -E apt-get -yq --no-install-suggests --no-install-recommends install python-dev ${PACKAGES}
       displayName: 'Install'
     - task: UsePythonVersion@0
       inputs:
