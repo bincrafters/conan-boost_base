@@ -32,6 +32,11 @@ class CreateAll(ForEach):
         self.__check_call__([
             'conan', 'remove', '-f', 'boost_*'
         ])
+        self.__check_call__([
+            "conan", "remote", "add",
+            "bincrafters",
+            "https://api.bintray.com/conan/bincrafters/public-conan"
+        ])
         super(CreateAll, self).groups_pre(groups)
 
     def package_do(self, package):
