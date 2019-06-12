@@ -14,10 +14,10 @@ stages:
       vmImage: 'ubuntu-16.04'
     strategy:
       matrix:
-        GCC 9:
-          CXX: g++-9
-          CC: gcc-9
-          PACKAGES: g++-9
+        GCC 8:
+          CXX: g++-8
+          CC: gcc-8
+          PACKAGES: g++-8
           CONAN_SETTINGS_OPT: -s compiler=gcc
     steps:
     - bash: |
