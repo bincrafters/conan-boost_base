@@ -16,6 +16,7 @@ stages:
       matrix:
         GCC 9:
           CXX: g++-9
+          CC: gcc-9
           PACKAGES: g++-9
           CONAN_SETTINGS_OPT: -s compiler=gcc -s compiler.gcc.version=9
     steps:
