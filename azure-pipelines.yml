@@ -68,6 +68,9 @@ stages:
           sudo -E apt-get update
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install ${PACKAGES}
       displayName: 'Install'
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x'
     - bash: |
           set -e
           pip3 install --upgrade pip
