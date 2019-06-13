@@ -48,6 +48,9 @@ stages:
               cd $original_directory;
           done;
       displayName: 'Workaround: roll back Python versions'
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x'
     - bash: |
           set -e
           uname -a
@@ -59,9 +62,6 @@ stages:
           sudo -E apt-get update
           sudo -E apt-get -yq --no-install-suggests --no-install-recommends install python-dev ${PACKAGES}
       displayName: 'Install'
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.x'
     - bash: |
           set -e
           pip3 install --upgrade pip
