@@ -19,7 +19,7 @@ stages:
           CC: gcc-8
           PACKAGES: g++-8
           CONAN_SETTINGS_OPT: -s compiler=gcc
-          CONTAINER_IMAGE: conanio/gcc8
+          CONTAINER_IMAGE: conanio/gcc8:latest
     container: $[ variables['CONTAINER_IMAGE'] ]
     steps:
     # - bash: |
