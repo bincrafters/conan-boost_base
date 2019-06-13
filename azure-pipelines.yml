@@ -29,12 +29,12 @@ stages:
           rm -rf $AGENT_TOOLSDIRECTORY/Python/3.5.7
           rm -rf $AGENT_TOOLSDIRECTORY/Python/3.7.3
           # Download new Pythons
-          azcopy --recursive \
-            --source https://vstsagenttools.blob.core.windows.net/tools/hostedtoolcache/linux/Python/2.7.15 \
-            --destination $AGENT_TOOLSDIRECTORY/Python/2.7.15
-          azcopy --recursive \
-            --source https://vstsagenttools.blob.core.windows.net/tools/hostedtoolcache/linux/Python/3.5.5 \
-            --destination $AGENT_TOOLSDIRECTORY/Python/3.5.5
+          # azcopy --recursive \
+          #   --source https://vstsagenttools.blob.core.windows.net/tools/hostedtoolcache/linux/Python/2.7.15 \
+          #   --destination $AGENT_TOOLSDIRECTORY/Python/2.7.15
+          # azcopy --recursive \
+          #   --source https://vstsagenttools.blob.core.windows.net/tools/hostedtoolcache/linux/Python/3.5.5 \
+          #   --destination $AGENT_TOOLSDIRECTORY/Python/3.5.5
           azcopy --recursive \
             --source https://vstsagenttools.blob.core.windows.net/tools/hostedtoolcache/linux/Python/3.7.2 \
             --destination $AGENT_TOOLSDIRECTORY/Python/3.7.2
