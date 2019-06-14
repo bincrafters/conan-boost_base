@@ -46,6 +46,10 @@ stages:
       displayName: 'Install: C++'
     - bash: |
           set -e
+          which python
+          which pip
+          which python3
+          which pip3
           pip3 install --upgrade pip
           pip3 install --upgrade conan
           pip3 install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
