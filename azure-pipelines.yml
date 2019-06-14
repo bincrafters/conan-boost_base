@@ -23,14 +23,15 @@ stages:
     - bash: |
           set -e
           uname -a
-          sudo apt update
-          sudo apt install software-properties-common
+          sudo apt-get update
+          sudo apt-get install software-properties-common
       displayName: 'Install: APT'
     - bash: |
           set -e
           uname -a
           sudo apt-add-repository -y "ppa:deadsnakes/ppa"
-          sudo apt install python3.6
+          sudo apt-get update
+          sudo apt-get install python3.6
       displayName: 'Install: Python 3.6'
     - bash: |
           set -e
@@ -40,7 +41,8 @@ stages:
             wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
             sudo apt-add-repository "deb http://apt.llvm.org/xenial/ ${LLVM_REPO} main"
           fi
-          sudo apt -yq --no-install-suggests --no-install-recommends install ${PACKAGES}
+          sudo apt-get update
+          sudo apt-get -yq --no-install-suggests --no-install-recommends install ${PACKAGES}
       displayName: 'Install: C++'
     - bash: |
           set -e
