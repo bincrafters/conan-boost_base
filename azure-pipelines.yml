@@ -1,5 +1,7 @@
 variables:
   BOOST_VERSION: 1.70.0
+  # PIP: pip3
+  PIP: pip
   # SUDO: ${SUDO}
 
 trigger:
@@ -56,9 +58,9 @@ stages:
       displayName: 'Install'
     - bash: |
           set -e
-          pip3 install --upgrade pip
-          pip3 install --upgrade conan
-          pip3 install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
+          ${PIP} install --upgrade pip
+          ${PIP} install --upgrade conan
+          ${PIP} install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
       displayName: 'PIP'
     - bash: |
           set -e
