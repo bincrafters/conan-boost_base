@@ -1,13 +1,10 @@
 variables:
   BOOST_VERSION: 1.70.0
-  # PIP: pip3
-  PIP: pip
-  # SUDO: ${SUDO}
 
 trigger:
   branches:
     include:
-      - testing/1.*
+      - testing/2.*
 
 stages:
 - stage: Create
@@ -20,47 +17,36 @@ stages:
         GCC 8:
           CXX: g++-9
           CC: gcc-9
-          # PACKAGES: g++-9
+          PACKAGES: g++-9
           CONAN_SETTINGS_OPT: -s compiler=gcc
-          CONTAINER_IMAGE: gcc:9
-    container: $[ variables['CONTAINER_IMAGE'] ]
     steps:
-    # - bash: |
-    #       set -e
-    #       rm -rf $AGENT_TOOLSDIRECTORY/Python/2.7.16
-    #       rm -rf $AGENT_TOOLSDIRECTORY/Python/3.5.7
-    #       rm -rf $AGENT_TOOLSDIRECTORY/Python/3.7.3
-    #       azcopy --recursive \
-    #         --source https://vstsagenttools.blob.core.windows.net/tools/hostedtoolcache/linux/Python/3.7.2 \
-    #         --destination $AGENT_TOOLSDIRECTORY/Python/3.7.2
-    #       original_directory=$PWD
-    #       setups=$(find $AGENT_TOOLSDIRECTORY/Python -name setup.sh)
-    #       for setup in $setups; do
-    #           chmod +x $setup;
-    #           cd $(dirname $setup);
-    #           ./$(basename $setup);
-    #           cd $original_directory;
-    #       done;
-    #   displayName: 'Workaround: roll back Python versions'
-    # - task: UsePythonVersion@0
-    #   inputs:
-    #     versionSpec: '3.x'
     - bash: |
           set -e
           uname -a
-          # ${SUDO} apt-add-repository -y "ppa:ubuntu-toolchain-r/test"
-          # if test -n "${LLVM_REPO}" ; then
-          #   wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          #   ${SUDO} apt-add-repository "deb http://apt.llvm.org/xenial/ ${LLVM_REPO} main"
-          # fi
-          # ${SUDO} apt-get update
-          # ${SUDO} apt-get -yq --no-install-suggests --no-install-recommends install python-dev ${PACKAGES}
-      displayName: 'Install'
+          sudo apt update
+          sudo apt install software-properties-common
+      displayName: 'Install: APT'
     - bash: |
           set -e
-          ${PIP} install --upgrade pip
-          ${PIP} install --upgrade conan
-          ${PIP} install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
+          uname -a
+          sudo apt-add-repository -y "ppa:deadsnakes/ppa"
+          sudo apt install python3.7 python3.7-dev
+      displayName: 'Install: Python 3.7'
+    - bash: |
+          set -e
+          uname -a
+          sudo apt-add-repository -y "ppa:ubuntu-toolchain-r/test"
+          if test -n "${LLVM_REPO}" ; then
+            wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+            sudo apt-add-repository "deb http://apt.llvm.org/xenial/ ${LLVM_REPO} main"
+          fi
+          sudo apt -yq --no-install-suggests --no-install-recommends install ${PACKAGES}
+      displayName: 'Install: C++'
+    - bash: |
+          set -e
+          pip3 install --upgrade pip
+          pip3 install --upgrade conan
+          pip3 install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
       displayName: 'PIP'
     - bash: |
           set -e
