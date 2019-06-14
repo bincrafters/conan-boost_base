@@ -51,8 +51,8 @@ stages:
           #   wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
           #   ${SUDO} apt-add-repository "deb http://apt.llvm.org/xenial/ ${LLVM_REPO} main"
           # fi
-          ${SUDO} apt-get update
-          ${SUDO} apt-get -yq --no-install-suggests --no-install-recommends install python-dev ${PACKAGES}
+          # ${SUDO} apt-get update
+          # ${SUDO} apt-get -yq --no-install-suggests --no-install-recommends install python-dev ${PACKAGES}
       displayName: 'Install'
     - bash: |
           set -e
