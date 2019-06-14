@@ -15,11 +15,11 @@ stages:
     strategy:
       matrix:
         GCC 8:
-          CXX: g++-8
-          CC: gcc-8
-          PACKAGES: g++-8
+          CXX: g++-9
+          CC: gcc-9
+          # PACKAGES: g++-9
           CONAN_SETTINGS_OPT: -s compiler=gcc
-          CONTAINER_IMAGE: conanio/gcc8:latest
+          CONTAINER_IMAGE: gcc:9
     container: $[ variables['CONTAINER_IMAGE'] ]
     steps:
     # - bash: |
@@ -42,17 +42,17 @@ stages:
     # - task: UsePythonVersion@0
     #   inputs:
     #     versionSpec: '3.x'
-    # - bash: |
-    #       set -e
-    #       uname -a
-    #       sudo -E apt-add-repository -y "ppa:ubuntu-toolchain-r/test"
-    #       if test -n "${LLVM_REPO}" ; then
-    #         wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-    #         sudo -E apt-add-repository "deb http://apt.llvm.org/xenial/ ${LLVM_REPO} main"
-    #       fi
-    #       sudo -E apt-get update
-    #       sudo -E apt-get -yq --no-install-suggests --no-install-recommends install python-dev ${PACKAGES}
-    #   displayName: 'Install'
+    - bash: |
+          set -e
+          uname -a
+          # sudo -E apt-add-repository -y "ppa:ubuntu-toolchain-r/test"
+          # if test -n "${LLVM_REPO}" ; then
+          #   wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          #   sudo -E apt-add-repository "deb http://apt.llvm.org/xenial/ ${LLVM_REPO} main"
+          # fi
+          sudo -E apt-get update
+          sudo -E apt-get -yq --no-install-suggests --no-install-recommends install python-dev ${PACKAGES}
+      displayName: 'Install'
     - bash: |
           set -e
           pip3 install --upgrade pip
