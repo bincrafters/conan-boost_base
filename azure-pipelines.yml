@@ -46,6 +46,8 @@ stages:
       displayName: 'Install: C++'
     - bash: |
           set -e
+          find / -name python3 -print
+          find / -name pip3 -print
           which python
           which pip
           python --version
