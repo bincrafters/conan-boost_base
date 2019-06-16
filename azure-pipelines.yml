@@ -1,5 +1,7 @@
 variables:
   BOOST_VERSION: 1.70.0
+  PYVER: 3.7
+  PYEXE: /usr/bin/python3.6m
 
 trigger:
   branches:
@@ -31,8 +33,10 @@ stages:
           uname -a
           sudo apt-add-repository -y "ppa:deadsnakes/ppa"
           sudo apt-get update
-          sudo apt-get install python3.6
-      displayName: 'Install: Python 3.6'
+          sudo apt-get install python${PYVER}
+          curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+          sudo ${PYEXE} get-pip.py
+      displayName: 'Install: Python'
     - bash: |
           set -e
           uname -a
@@ -46,28 +50,13 @@ stages:
       displayName: 'Install: C++'
     - bash: |
           set -e
-          /usr/bin/python3.6m --version
-          /usr/bin/python3.6 --version
-          sudo apt-file update
-          sudo apt-file search pip3
-          # find / -name "python*" -type f -perm -a+x -print -exec '{}' --version ';'
-          # find / -name python3 -print -exec 
-          # find / -name pip3 -print
-          # echo "/usr/bin/python"
-          # /usr/bin/python --version
-          # /usr/bin/pip --version
-          # echo "/usr/bin/python3"
-          # /usr/bin/python3 --version
-          # /usr/bin/pip3 --version
-          # echo "/opt/az/bin/python3"
-          # /opt/az/bin/python3 --version
-          # /opt/az/bin/pip3 --version
+          ${/usr/bin/python3.6m} --version
       displayName: 'Info: Python'
     - bash: |
           set -e
-          pip3 install --upgrade pip
-          pip3 install --upgrade conan
-          pip3 install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
+          pip${PYVER} install --upgrade pip
+          pip${PYVER} install --upgrade conan
+          pip${PYVER} install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
       displayName: 'Install: PIP'
     - bash: |
           set -e
