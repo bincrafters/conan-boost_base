@@ -46,7 +46,7 @@ stages:
       displayName: 'Install: C++'
     - bash: |
           sudo apt-file update
-          apt-file list python3.6
+          apt-file list libpython3.6-minimal libpython3.6-stdlib python3.6 python3.6-minimal
           # find / -name "python*" -type f -perm -a+x -print -exec '{}' --version ';'
           # find / -name python3 -print -exec 
           # find / -name pip3 -print
