@@ -45,6 +45,7 @@ stages:
           sudo apt-get -yq --no-install-suggests --no-install-recommends install ${PACKAGES}
       displayName: 'Install: C++'
     - bash: |
+          sudo apt-file update
           apt-file list python3.6
           # find / -name "python*" -type f -perm -a+x -print -exec '{}' --version ';'
           # find / -name python3 -print -exec 
