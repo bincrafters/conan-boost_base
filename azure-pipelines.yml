@@ -1,7 +1,7 @@
 variables:
   BOOST_VERSION: 1.70.0
   PYVER: 3.7
-  PYEXE: /usr/bin/python3.6m
+  PYEXE: /usr/bin/python3.7m
 
 trigger:
   branches:
