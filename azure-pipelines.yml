@@ -50,7 +50,7 @@ stages:
       displayName: 'Install: C++'
     - bash: |
           set -e
-          ${/usr/bin/python3.6m} --version
+          ${PYEXE} --version
       displayName: 'Info: Python'
     - bash: |
           set -e
