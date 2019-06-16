@@ -45,8 +45,11 @@ stages:
           sudo apt-get -yq --no-install-suggests --no-install-recommends install ${PACKAGES}
       displayName: 'Install: C++'
     - bash: |
+          set -e
           sudo apt-file update
-          apt-file list libpython3.6-minimal libpython3.6-stdlib python3.6 python3.6-minimal
+          sudo apt-file search python3
+          sudo dpkg -S python3
+          sudo apt-file list libpython3.6-minimal libpython3.6-stdlib python3.6 python3.6-minimal
           # find / -name "python*" -type f -perm -a+x -print -exec '{}' --version ';'
           # find / -name python3 -print -exec 
           # find / -name pip3 -print
