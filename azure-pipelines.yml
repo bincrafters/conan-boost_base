@@ -54,9 +54,9 @@ stages:
       displayName: 'Info: Python'
     - bash: |
           set -e
-          pip${PYVER} install --upgrade pip
-          pip${PYVER} install --upgrade conan
-          pip${PYVER} install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
+          sudo pip${PYVER} install --upgrade pip
+          sudo pip${PYVER} install --upgrade conan
+          sudo pip${PYVER} install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
       displayName: 'Install: PIP'
     - bash: |
           set -e
