@@ -17,9 +17,9 @@ stages:
     strategy:
       matrix:
         GCC 8:
-          CXX: g++-9
-          CC: gcc-9
-          PACKAGES: g++-9
+          CXX: g++-8
+          CC: gcc-8
+          PACKAGES: g++-8
           CONAN_SETTINGS_OPT: -s compiler=gcc
     steps:
     - bash: |
@@ -66,5 +66,5 @@ stages:
       displayName: 'Clone'
     - bash: |
           set -e
-          ${PYEXE} ./src/script/create_all.py "++trace" "++repo-dir=${HOME}/conan-boost" "++version=${BOOST_VERSION}" ${CONAN_SETTINGS_OPT}
+          ${PYEXE} ./src/script/create_all.py "++trace" "++repo-dir=${HOME}/conan-boost" "++version=${BOOST_VERSION}" ${CONAN_SETTINGS_OPT} -o "*:python=${PYEXE}"
       displayName: 'Create'
