@@ -60,11 +60,11 @@ stages:
       displayName: 'Install: PIP'
     - bash: |
           set -e
-          ./src/script/clone_conan_boost.py "++repo-dir=${HOME}/conan-boost" "++version=${BOOST_VERSION}"
+          ${PYEXE} ./src/script/clone_conan_boost.py "++repo-dir=${HOME}/conan-boost" "++version=${BOOST_VERSION}"
           pushd "${HOME}/conan-boost"
           git submodule foreach git checkout "testing/${BOOST_VERSION}"
       displayName: 'Clone'
     - bash: |
           set -e
-          ./src/script/create_all.py "++trace" "++repo-dir=${HOME}/conan-boost" "++version=${BOOST_VERSION}" ${CONAN_SETTINGS_OPT}
+          ${PYEXE} ./src/script/create_all.py "++trace" "++repo-dir=${HOME}/conan-boost" "++version=${BOOST_VERSION}" ${CONAN_SETTINGS_OPT}
       displayName: 'Create'
