@@ -39,6 +39,10 @@ stages:
       displayName: 'Install: Python'
     - bash: |
           set -e
+          ${PYEXE} --version
+      displayName: 'Info: Python'
+    - bash: |
+          set -e
           uname -a
           sudo apt-add-repository -y "ppa:ubuntu-toolchain-r/test"
           if test -n "${LLVM_REPO}" ; then
@@ -49,9 +53,14 @@ stages:
           sudo apt-get -yq --no-install-suggests --no-install-recommends install ${PACKAGES}
       displayName: 'Install: C++'
     - bash: |
-          set -e
-          ${PYEXE} --version
-      displayName: 'Info: Python'
+          ${CXX} --version
+          echo "which gcc .."
+          which gcc
+          echo "which g++ .."
+          which g++
+          echo "which clang .."
+          which clang
+      displayName: 'Info: C++'
     - bash: |
           set -e
           sudo pip${PYVER} install --upgrade pip
