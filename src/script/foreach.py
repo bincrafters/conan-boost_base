@@ -6,6 +6,7 @@
     LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 """
 import os.path
+import sys
 from pprint import pprint
 from bls.git_tool import Git
 from bls.util import Main, PushDir
@@ -81,6 +82,7 @@ class ForEach(Main):
             # Decimate the graph to remove this group.
             for package in package_deps.keys():
                 package_deps[package] -= group
+        sys.stdout.flush()
 
         os.environ['CONAN_VERBOSE_TRACEBACK'] = '1'
 
