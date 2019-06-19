@@ -41,6 +41,9 @@ class CreateAll(ForEach):
 
     def package_do(self, package):
         super(CreateAll, self).package_do(package)
+        print('>>>>>>>>>>')
+        print('>>>>>>>>>> '+package)
+        print('>>>>>>>>>>')
         if package == 'base':
             with PushDir(os.path.dirname(os.path.dirname(script_dir))) as _:
                 self.__check_call__([
