@@ -250,6 +250,13 @@ class BoostBaseConan(ConanFile):
                     setattr(
                         self.options[self.boost_cycle_group], option, value)
 
+    def config_options(self):
+        if self.is_base:
+            pass
+        else:
+            for mixin in self.boost_mixins:
+                mixin.config_options()
+
     def requirements(self):
         '''
         Calculates dependency requires to other Boost packages.
@@ -696,6 +703,9 @@ alias boost_{lib} : {space_joined_libs} : : : $(usage) ;
                 if dep_name.startswith("boost_")]
             for dep_name in boost_deps_only:
                 self.info.requires[dep_name].full_version_mode()
+
+            for mixin in self.boost_mixins:
+                mixin.package_id()
 
     #
     # Translation of Conan to B2 equivalents..
@@ -1223,10 +1233,16 @@ class BoostConanMixin(object):
     def build_requirements(self):
         pass
 
+    def config_options(self):
+        pass
+
     def package_info(self):
         pass
 
     def source(self):
+        pass
+
+    def package_id(self):
         pass
 
 
@@ -1294,7 +1310,7 @@ class BoostConanMixin_ICU(BoostConanMixin):
 boost_conan_mixins.append(BoostConanMixin_ICU)
 
 
-class BoostConanMixin_Python(BoostConanMixin):
+class BoostConanMixin_WithPython(BoostConanMixin):
 
     options = {
         'with_boost_python': [True, False]
@@ -1323,7 +1339,7 @@ class BoostConanMixin_Python(BoostConanMixin):
             self.conanfile.info.options["boost_python"].python_version = "any"
 
 
-boost_conan_mixins.append(BoostConanMixin_Python)
+boost_conan_mixins.append(BoostConanMixin_WithPython)
 
 
 class BoostConanMixin_MPI(BoostConanMixin):
@@ -1430,3 +1446,40 @@ class BoostConanMixin_Thread(BoostConanMixin):
 
 
 boost_conan_mixins.append(BoostConanMixin_Thread)
+
+
+class BoostConanMixin_PythonDevConfig(BoostConanMixin):
+
+    options = {
+        "python_version": [
+            None, '2.2', '2.3', '2.4', '2.5', '2.6', '2.7', '3.0', '3.1',
+            '3.2', '3.3', '3.4', '3.5', '3.6', '3.7', '3.8', '3.9']
+    }
+
+    @property
+    def matches(self):
+        return 'python' in self.conanfile.boost_libs or\
+            self.conanfile.boost_name == 'python'
+
+    def config_options(self):
+        if 'python_version' in self.options:
+            if self.conanfile.options.python_version and self.conanfile.options.python_version != self.conanfile.deps_user_info['python_dev_config'].python_version:
+                raise Exception(
+                    "Python version does not match with configured python dev, expected %s but got %s." % (
+                        self.conanfile.options.python_version, self.conanfile.deps_user_info['python_dev_config'].python_version))
+
+    def requirements(self):
+        self.conanfile.requires("python_dev_config/0.6@bincrafters/stable")
+
+    def package_info(self):
+        if self.conanfile.options.shared:
+            self.conanfile.cpp_info.defines.append('BOOST_PYTHON_DYNAMIC_LIB')
+        else:
+            self.conanfile.cpp_info.defines.append('BOOST_PYTHON_STATIC_LIB')
+
+    def package_id(self):
+        self.conanfile.info.options.python_version \
+            = "python-" + str(self.conanfile.options.python_version)
+
+
+boost_conan_mixins.append(BoostConanMixin_PythonDevConfig)
