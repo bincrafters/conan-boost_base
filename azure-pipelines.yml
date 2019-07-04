@@ -101,7 +101,7 @@ stages:
     - powershell: |
           python ./src/script/clone_conan_boost.py ++repo-dir=$env:HOME/conan-boost ++version=$env:BOOST_VERSION
           cd $env:HOME/conan-boost
-          git submodule foreach git checkout testing/$env:BOOST_VERSION "2>&1"
+          git submodule foreach git checkout -b testing/$env:BOOST_VERSION --track origin/testing/$env:BOOST_VERSION "2>&1"
       displayName: 'Clone'
     - powershell: |
           python ./src/script/create_all.py ++trace ++repo-dir=$env:HOME/conan-boost ++version=$env:BOOST_VERSION $env:CONAN_SETTINGS_OPT -o "*:python=python"
