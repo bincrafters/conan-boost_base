@@ -99,10 +99,10 @@ stages:
           pip install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
       displayName: 'Install: PIP'
     - powershell: |
-          python ./src/script/clone_conan_boost.py "++repo-dir=$env:HOME/conan-boost" "++version=$env:BOOST_VERSION"
-          cd "$env:HOME/conan-boost"
-          git submodule foreach git checkout "testing/$env:BOOST_VERSION"
+          python ./src/script/clone_conan_boost.py ++repo-dir=$env:HOME/conan-boost ++version=$env:BOOST_VERSION
+          cd $env:HOME/conan-boost
+          git submodule foreach git checkout testing/$env:BOOST_VERSION
       displayName: 'Clone'
     - powershell: |
-          python ./src/script/create_all.py "++trace" "++repo-dir=$env:HOME/conan-boost" "++version=$env:BOOST_VERSION" $env:CONAN_SETTINGS_OPT -o "*:python=python"
+          python ./src/script/create_all.py ++trace ++repo-dir=$env:HOME/conan-boost ++version=$env:BOOST_VERSION $env:CONAN_SETTINGS_OPT -o "*:python=python"
       displayName: 'Create'
