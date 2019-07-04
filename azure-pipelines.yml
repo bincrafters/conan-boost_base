@@ -100,7 +100,7 @@ stages:
       displayName: 'Install: PIP'
     - powershell: |
           python ./src/script/clone_conan_boost.py "++repo-dir=$env:HOME/conan-boost" "++version=$env:BOOST_VERSION"
-          cd "${HOME}/conan-boost"
+          cd "$env:HOME/conan-boost"
           git submodule foreach git checkout "testing/$env:BOOST_VERSION"
       displayName: 'Clone'
     - powershell: |
