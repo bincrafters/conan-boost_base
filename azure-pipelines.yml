@@ -1,7 +1,5 @@
 variables:
   BOOST_VERSION: 1.70.0
-  PYVER: 3.7
-  PYEXE: /usr/bin/python3.7m
 
 trigger:
   branches:
@@ -21,6 +19,8 @@ stages:
           CC: gcc-8
           PACKAGES: g++-8
           CONAN_SETTINGS_OPT: -s compiler=gcc
+          PYVER: 3.7
+          PYEXE: /usr/bin/python3.7m
     steps:
     - bash: |
           set -e
@@ -78,4 +78,31 @@ stages:
           set -e
           export "PATH=/usr/bin:${PATH}"
           ${PYEXE} ./src/script/create_all.py "++trace" "++repo-dir=${HOME}/conan-boost" "++version=${BOOST_VERSION}" ${CONAN_SETTINGS_OPT} -o "*:python=${PYEXE}"
+      displayName: 'Create'
+
+  - job: 'Windows'
+    pool:
+      vmImage: 'windows-2019'
+    strategy:
+      matrix:
+        MSVC 2019:
+          CONAN_SETTINGS_OPT: -s "compiler=Visual Studio" -s "compiler.version=16"
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x' 
+        addToPath: true 
+        architecture: 'x64'
+    - powershell: |
+          pip install --upgrade pip
+          pip install --upgrade conan
+          pip install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
+      displayName: 'Install: PIP'
+    - powershell: |
+          python ./src/script/clone_conan_boost.py "++repo-dir=${HOME}/conan-boost" "++version=${BOOST_VERSION}"
+          cd "${HOME}/conan-boost"
+          git submodule foreach git checkout "testing/${BOOST_VERSION}"
+      displayName: 'Clone'
+    - powershell: |
+          python ./src/script/create_all.py "++trace" "++repo-dir=${HOME}/conan-boost" "++version=${BOOST_VERSION}" ${CONAN_SETTINGS_OPT} -o "*:python=python"
       displayName: 'Create'
