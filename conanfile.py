@@ -23,7 +23,8 @@ class BoostBaseConan(ConanFile):
         "Boost libraries"
     license = "MIT"
     exports_sources = [
-        "LICENSE.md",
+        "LICENSE.md"]
+    exports = [
         "src/data/package-data-boost-*.json",
         "src/script/short_path.cmd",
         "src/template/*.jam"]
@@ -55,9 +56,7 @@ class BoostBaseConan(ConanFile):
     @property
     def base_source_path(self):
         if not hasattr(self, '_base_source_path_'):
-            self._base_source_path_ = os.path.join(
-                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                "export_source")
+            self._base_source_path_ = os.path.dirname(os.path.abspath(__file__))
         return self._base_source_path_
 
     def boost_init(self):
