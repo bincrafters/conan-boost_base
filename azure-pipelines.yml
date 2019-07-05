@@ -118,7 +118,6 @@ stages:
     - bash: |
           set -e
           brew update
-          brew rm python3
           brew install python3
       displayName: 'Install: Python 3.x'
     - bash: |
