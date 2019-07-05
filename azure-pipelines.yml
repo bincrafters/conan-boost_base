@@ -86,7 +86,7 @@ stages:
     strategy:
       matrix:
         MSVC 2019:
-          CONAN_SETTINGS_OPT: -s compiler=Visual\ Studio -s compiler.version=16
+          CONAN_SETTINGS_OPT: -s compiler=Visual Studio -s compiler.version=16
     steps:
     - task: UsePythonVersion@0
       inputs:
@@ -104,5 +104,5 @@ stages:
           git submodule foreach git checkout testing/${BOOST_VERSION}
       displayName: 'Clone'
     - bash: |
-          python ./src/script/create_all.py ++trace ++repo-dir=${HOME}/conan-boost ++version=${BOOST_VERSION} ${CONAN_SETTINGS_OPT} -o "*:python=python"
+          python ./src/script/create_all.py ++trace ++repo-dir=${HOME}/conan-boost ++version=${BOOST_VERSION} -s "compiler=Visual Studio" -s compiler.version=16 -o "*:python=python"
       displayName: 'Create'
