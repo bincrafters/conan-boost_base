@@ -778,7 +778,7 @@ alias boost_{lib} : {space_joined_libs} : : : $(usage) ;
     @property
     def b2_toolset_version(self):
         if self.settings.compiler == "Visual Studio":
-            return self._b2_msvc_version[self.settings.compiler.version]
+            return self._b2_msvc_version[str(self.settings.compiler.version)]
         else:
             return "$(DEFAULT)"
 
