@@ -56,8 +56,8 @@ class BoostBaseConan(ConanFile):
     def base_source_path(self):
         if not hasattr(self, '_base_source_path_'):
             self._base_source_path_ = os.path.join(
-                os.path.dirname(os.path.abspath(__file__)),
-                os.pardir, "export_source")
+                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                "export_source")
         return self._base_source_path_
 
     def boost_init(self):
