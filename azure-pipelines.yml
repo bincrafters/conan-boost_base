@@ -86,7 +86,7 @@ stages:
     strategy:
       matrix:
         MSVC 2019:
-          CONAN_SETTINGS_OPT: -s "compiler=Visual Studio" -s "compiler.version=16"
+          CONAN_SETTINGS_OPT: -s compiler=Visual\ Studio -s compiler.version=16
     steps:
     - task: UsePythonVersion@0
       inputs:
