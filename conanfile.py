@@ -1393,7 +1393,7 @@ class BoostConanMixin_Iostreams(BoostConanMixin):
         if self.conanfile.options.use_lzma:
             self.conanfile.requires("lzma/5.2.4@bincrafters/stable")
         if self.conanfile.options.use_zstd:
-            self.conanfile.requires("zstd/1.3.5@bincrafters/stable")
+            self.conanfile.requires("zstd/1.4.0@bincrafters/stable")
 
     def package_info(self):
         if self.conanfile.options.use_bzip2:
