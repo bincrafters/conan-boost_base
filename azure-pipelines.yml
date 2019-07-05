@@ -115,21 +115,24 @@ stages:
         Xcode 10.0:
           CONAN_SETTINGS_OPT: -s compiler=apple-clang -s compiler.version=10.0
     steps:
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.x' 
-        addToPath: true 
-        architecture: 'x64'
     - bash: |
-          pip install --upgrade pip
-          pip install --upgrade conan
-          pip install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
+          set -e
+          brew update
+          brew rm python3
+          brew install python3
+      displayName: 'Install: Python 3.x'
+    - bash: |
+          set -e
+          pip3 install --upgrade pip
+          pip3 install --upgrade conan
+          pip3 install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
       displayName: 'Install: PIP'
     - bash: |
-          python ./src/script/clone_conan_boost.py ++repo-dir=${HOME}/conan-boost ++version=${BOOST_VERSION}
+          set -e
+          python3 ./src/script/clone_conan_boost.py ++repo-dir=${HOME}/conan-boost ++version=${BOOST_VERSION}
           cd ${HOME}/conan-boost
           git submodule foreach git checkout testing/${BOOST_VERSION}
       displayName: 'Clone'
     - bash: |
-          python ./src/script/create_all.py ++trace ++repo-dir=${HOME}/conan-boost ++version=${BOOST_VERSION} ${CONAN_SETTINGS_OPT} -o "*:python=python"
+          python3 ./src/script/create_all.py ++trace ++repo-dir=${HOME}/conan-boost ++version=${BOOST_VERSION} ${CONAN_SETTINGS_OPT} -o "*:python=python3"
       displayName: 'Create'
