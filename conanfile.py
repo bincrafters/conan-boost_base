@@ -23,7 +23,8 @@ class BoostBaseConan(ConanFile):
         "Boost libraries"
     license = "MIT"
     exports_sources = [
-        "LICENSE.md",
+        "LICENSE.md"]
+    exports = [
         "src/data/package-data-boost-*.json",
         "src/script/short_path.cmd",
         "src/template/*.jam"]
@@ -55,9 +56,7 @@ class BoostBaseConan(ConanFile):
     @property
     def base_source_path(self):
         if not hasattr(self, '_base_source_path_'):
-            self._base_source_path_ = os.path.join(
-                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                "export_source")
+            self._base_source_path_ = os.path.dirname(os.path.abspath(__file__))
         return self._base_source_path_
 
     def boost_init(self):
@@ -779,7 +778,7 @@ alias boost_{lib} : {space_joined_libs} : : : $(usage) ;
     @property
     def b2_toolset_version(self):
         if self.settings.compiler == "Visual Studio":
-            return self._b2_msvc_version[self.settings.compiler.version]
+            return self._b2_msvc_version[str(self.settings.compiler.version)]
         else:
             return "$(DEFAULT)"
 
@@ -1394,7 +1393,7 @@ class BoostConanMixin_Iostreams(BoostConanMixin):
         if self.conanfile.options.use_lzma:
             self.conanfile.requires("lzma/5.2.4@bincrafters/stable")
         if self.conanfile.options.use_zstd:
-            self.conanfile.requires("zstd/1.3.5@bincrafters/stable")
+            self.conanfile.requires("zstd/1.4.0@bincrafters/stable")
 
     def package_info(self):
         if self.conanfile.options.use_bzip2:
