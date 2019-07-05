@@ -131,5 +131,5 @@ stages:
           git submodule foreach git checkout testing/${BOOST_VERSION}
       displayName: 'Clone'
     - bash: |
-          python ./src/script/create_all.py ++trace ++repo-dir=${HOME}/conan-boost ++version=${BOOST_VERSION} -s "compiler=Visual Studio" -s compiler.version=16 -o "*:python=python"
+          python ./src/script/create_all.py ++trace ++repo-dir=${HOME}/conan-boost ++version=${BOOST_VERSION} ${CONAN_SETTINGS_OPT} -o "*:python=python"
       displayName: 'Create'
