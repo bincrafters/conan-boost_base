@@ -93,6 +93,7 @@ stages:
         versionSpec: '3.x' 
         addToPath: true 
         architecture: 'x64'
+      name: Python3
     - bash: |
           pip install --upgrade pip
           pip install --upgrade conan
@@ -104,6 +105,7 @@ stages:
           git submodule foreach git checkout testing/${BOOST_VERSION}
       displayName: 'Clone'
     - bash: |
+          export "PYTHONHOME=${PYTHON3_PYTHONLOCATION}"
           python ./src/script/create_all.py ++trace ++repo-dir=${HOME}/conan-boost ++version=${BOOST_VERSION} -s "compiler=Visual Studio" -s compiler.version=16 -o "*:python=python"
       displayName: 'Create'
 
