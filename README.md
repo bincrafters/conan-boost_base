@@ -148,3 +148,41 @@ creates all the new release branches.
 #### New Boost Packages
 
 With every release comes the likelihood that new Boost libraries are added.
+We will need to add new package repositories for such libraries. First we
+create a local git repo with the new package:
+
+```
+cd ./conan-boost
+mkdir <library>
+git init
+```
+
+Now you can copy the contents from an existing package to get started.
+You'll need to edit at least the `conanfile.py` and `README.md` files
+for the new library. It's also a good idea to add a `test_package` if
+possible. You can now go ahead and add the preliminary files to git:
+
+```
+git add *
+git commit -m "Initial"
+```
+
+By default that will create a `master` branch which is not the norm for
+Bincrafter packages. We need to rename the brach to the `testing/<version>`
+standard:
+
+```
+git branch -m master testing/1.X.Y
+```
+
+We now need to publish the new package in Github for further development:
+
+1. Go to Github and add a new empty repo as `conan-boost_<name>`.
+2. Push the local repo to replace the Git.
+3. Create a new set of clones for the packages of this version.
+
+For 1 and 2 you can consult Github for instructions. And for 3 go to the
+section above.
+
+NOTE: It's possible to skip step 3 here. But that requires you do some
+extra git submodule commands to add to the existing super project repo.

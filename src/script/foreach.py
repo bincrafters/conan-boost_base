@@ -99,34 +99,70 @@ class ForEach(Main):
             self.groups_post(groups)
 
     def groups_pre(self, groups):
+        '''
+        Called before processing all the groups. It calls `group_pre` for each
+        group in DAG order.
+        '''
         for group in groups:
             self.group_pre(group)
 
     def groups_foreach(self, groups):
+        '''
+        Called to process all the groups. It calls `group_foreach` for each
+        group in DAG order.
+        '''
         for group in groups:
             self.group_foreach(group)
 
     def groups_post(self, groups):
+        '''
+        Called after processing all the groups. It calls `group_post` for each
+        group in DAG order.
+        '''
         for group in groups:
             self.group_post(group)
 
     def group_pre(self, group):
+        '''
+        Called before processing all the packages in a group. It calls
+        `package_pre` for each package in an arbitrary order.
+        '''
         for package in group:
             self.package_pre(package)
 
     def group_foreach(self, group):
+        '''
+        Called to process all the packages in a group. It calls `package_do`
+        for each package in an arbitrary order.
+        '''
         for package in group:
             self.package_do(package)
 
     def group_post(self, group):
+        '''
+        Called after processing all the packages in a group. It calls
+        `package_post` for each package in an arbitrary order.
+        '''
         for package in group:
             self.package_post(package)
 
     def package_pre(self, package):
+        '''
+        Called before all packages are procesed for one `package`. Default
+        does nothing.
+        '''
         pass
 
     def package_do(self, package):
+        '''
+        Called while processing packages for one `package`. Default
+        does nothing.
+        '''
         pass
 
     def package_post(self, package):
+        '''
+        Called after all packages are procesed for one `package`. Default
+        does nothing.
+        '''
         pass

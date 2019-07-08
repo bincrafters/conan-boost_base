@@ -16,18 +16,37 @@ boost_conan_mixins = []
 
 
 class BoostBaseConan(ConanFile):
+    '''
+    This is the base class to all the Boost moduler packages. It combines
+    what used to be multiple utility packages and generators into a single
+    centralized script. It's main duties include: using the Boost library
+    data for depdency information, uniform settings, uniform options,
+    generate B2 scripts for building, generate B2 scripts for inter-package
+    consumption, mapping Conan settings to B2 features, configuring common
+    package options, and costomization mixins. It is used in the individual
+    Boost packages with the use of `python_requires`.
+    '''
+
+    # These are the base definitions for this base packages.
     name = "boost_base"
     version = "2.0.0"
-    website = "https://github.com/boostorg"
     description = "Shared python code used in other Conan recipes for the" + \
         "Boost libraries"
-    license = "MIT"
     exports_sources = [
         "LICENSE.md"]
+    # We export some source files that are used during building each library.
     exports = [
+        # These contain general package information, like dependencies, for
+        # each release version we understand.
         "src/data/package-data-boost-*.json",
+        # This is a utility to compute the Windows short path from a full path.
         "src/script/short_path.cmd",
+        # B2 template files for per library building.
         "src/template/*.jam"]
+
+    # These are the definitions common to all Boost packages.
+    website = "https://github.com/boostorg"
+    license = "MIT"
     short_paths = True
     settings = "os", "arch", "compiler", "build_type"
     boost_source_repo = {}
@@ -1199,7 +1218,15 @@ alias boost_{lib} : {space_joined_libs} : : : $(usage) ;
 
 
 class BoostConanMixin(object):
+    '''
+    This base mixin class provides for dynamic hooks into the packaging steps.
+    When a mixing is included. i.e. it matches, the current packaging context
+    the `BoostBaseConan` class will invoke the callbacks herein. Consult the
+    method and properties in the `BoostBaseConan` class for the effects. The
+    current package being built is available as the `self.conanfile`.
+    '''
 
+    # Definitions to add to the current package.
     options = {}
     default_options = {}
 
@@ -1246,6 +1273,9 @@ class BoostConanMixin(object):
 
 
 class BoostConanMixin_Shared(BoostConanMixin):
+    '''
+    Mixin to define `shared` package option.
+    '''
 
     options = {
         'shared': [False, True]
@@ -1256,13 +1286,20 @@ class BoostConanMixin_Shared(BoostConanMixin):
 
     @property
     def matches(self):
+        '''
+        Add the `shared` option when there are libraries to build. I.e. not
+        when we have all header only libs.
+        '''
         return len(self.conanfile.boost_libs_to_build) > 0
 
 
 boost_conan_mixins.append(BoostConanMixin_Shared)
 
 
-class BoostConanMixin_ICU(BoostConanMixin):
+class BoostConanMixin_UseICU(BoostConanMixin):
+    '''
+    This adds a `use_icu` option for packages where ICU can be used.
+    '''
 
     options = {
         "use_icu": [True, False]
@@ -1273,6 +1310,12 @@ class BoostConanMixin_ICU(BoostConanMixin):
 
     @property
     def matches(self):
+        '''
+        This matches when it's the locale or regex libraries. Because the
+        libraries could be: an alias package, in a cycle group, or standalone
+        we need to check both the set of libraries in the package and the
+        package itself.
+        '''
         return 'locale' in self.conanfile.boost_libs or\
             self.conanfile.boost_name == 'locale' or\
             'regex' in self.conanfile.boost_libs or\
@@ -1281,6 +1324,8 @@ class BoostConanMixin_ICU(BoostConanMixin):
     @property
     def boost_build_options(self):
         if 'locale' in self.conanfile.boost_libs:
+            # These are the B2 fatures that Boost Locale uses to optionally
+            # build with ICU.
             if self.conanfile.options.use_icu:
                 return {
                     "boost.locale.iconv": "off",
@@ -1295,21 +1340,29 @@ class BoostConanMixin_ICU(BoostConanMixin):
 
     def requirements(self):
         if self.conanfile.options.use_icu:
+            # We use the Conan ICU package when enabled.
             self.conanfile.requires("icu/63.1@bincrafters/stable")
 
     def package_info(self):
         if 'locale' in self.conanfile.boost_libs:
             if self.conanfile.options.use_icu:
+                # Boost Locale consumers need to also define a specific
+                # preprocess symbol to tell the header code they want ICU
+                # features.
                 self.conanfile.cpp_info.defines.append(
                     "BOOST_LOCALE_WITH_ICU=1")
             elif self.conanfile.settings.os == "Macos":
+                # On macOS Boost Locale uses the system iconv library.
                 self.conanfile.cpp_info.libs.append("iconv")
 
 
-boost_conan_mixins.append(BoostConanMixin_ICU)
+boost_conan_mixins.append(BoostConanMixin_UseICU)
 
 
-class BoostConanMixin_WithPython(BoostConanMixin):
+class BoostConanMixin_WithBoostPython(BoostConanMixin):
+    '''
+    Adds a `with_boost_python` option.
+    '''
 
     options = {
         'with_boost_python': [True, False]
@@ -1338,7 +1391,7 @@ class BoostConanMixin_WithPython(BoostConanMixin):
             self.conanfile.info.options["boost_python"].python_version = "any"
 
 
-boost_conan_mixins.append(BoostConanMixin_WithPython)
+boost_conan_mixins.append(BoostConanMixin_WithBoostPython)
 
 
 class BoostConanMixin_MPI(BoostConanMixin):
