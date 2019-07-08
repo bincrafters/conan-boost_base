@@ -75,7 +75,8 @@ class BoostBaseConan(ConanFile):
     @property
     def base_source_path(self):
         if not hasattr(self, '_base_source_path_'):
-            self._base_source_path_ = os.path.dirname(os.path.abspath(__file__))
+            self._base_source_path_ = os.path.dirname(
+                os.path.abspath(__file__))
         return self._base_source_path_
 
     def boost_init(self):
@@ -1361,7 +1362,7 @@ boost_conan_mixins.append(BoostConanMixin_UseICU)
 
 class BoostConanMixin_WithBoostPython(BoostConanMixin):
     '''
-    Adds a `with_boost_python` option.
+    Adds a `with_boost_python` option to control optional use of Boost Python.
     '''
 
     options = {
@@ -1374,6 +1375,9 @@ class BoostConanMixin_WithBoostPython(BoostConanMixin):
 
     @property
     def matches(self):
+        '''
+        This mixing maches for the Boost MPI library.
+        '''
         return 'mpi' in self.conanfile.boost_libs or\
             self.conanfile.boost_name == 'mpi'
 
@@ -1388,13 +1392,18 @@ class BoostConanMixin_WithBoostPython(BoostConanMixin):
 
     def package_info(self):
         if self.conanfile.options.with_boost_python:
+            # We unpin the python version of the dependency so that
+            # user specification overrides the dependency.
             self.conanfile.info.options["boost_python"].python_version = "any"
 
 
 boost_conan_mixins.append(BoostConanMixin_WithBoostPython)
 
 
-class BoostConanMixin_MPI(BoostConanMixin):
+class BoostConanMixin_MPILib(BoostConanMixin):
+    '''
+    THis mixin adds the requirements and setup for using and MPI framework.
+    '''
 
     @property
     def matches(self):
@@ -1405,13 +1414,15 @@ class BoostConanMixin_MPI(BoostConanMixin):
             self.conanfile.build_requires("openmpi/3.0.0@bincrafters/stable")
 
 
-boost_conan_mixins.append(BoostConanMixin_MPI)
+boost_conan_mixins.append(BoostConanMixin_MPILib)
 
 
 class BoostConanMixin_Iostreams(BoostConanMixin):
     '''
     Specifies settings for "iostreams" library. Needed as it's part of a cycle.
     '''
+
+    # TODO: This could be separated into individual mixins.
 
     options = {
         "use_bzip2": [True, False],
@@ -1501,6 +1512,10 @@ boost_conan_mixins.append(BoostConanMixin_Thread)
 
 
 class BoostConanMixin_PythonDevConfig(BoostConanMixin):
+    '''
+    Configures using `python_dev_config` for libraries that provide some
+    interface to Python.
+    '''
 
     options = {
         "python_version": [
@@ -1515,15 +1530,23 @@ class BoostConanMixin_PythonDevConfig(BoostConanMixin):
 
     def config_options(self):
         if 'python_version' in self.options:
-            if self.conanfile.options.python_version and self.conanfile.options.python_version != self.conanfile.deps_user_info['python_dev_config'].python_version:
+            # The user specified version must match the dependency.
+            if self.conanfile.options.python_version and \
+                self.conanfile.options.python_version \
+                    != self.conanfile.deps_user_info[
+                        'python_dev_config'].python_version:
                 raise Exception(
-                    "Python version does not match with configured python dev, expected %s but got %s." % (
-                        self.conanfile.options.python_version, self.conanfile.deps_user_info['python_dev_config'].python_version))
+                    "Python version does not match with configured python " +
+                    "dev, expected %s but got %s." % (
+                        self.conanfile.options.python_version,
+                        self.conanfile.deps_user_info[
+                            'python_dev_config'].python_version))
 
     def requirements(self):
         self.conanfile.requires("python_dev_config/0.6@bincrafters/stable")
 
     def package_info(self):
+        # TODO: This probably belongs in separate BPL mixin.
         if self.conanfile.options.shared:
             self.conanfile.cpp_info.defines.append('BOOST_PYTHON_DYNAMIC_LIB')
         else:
