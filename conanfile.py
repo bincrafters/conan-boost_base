@@ -74,6 +74,11 @@ class BoostBaseConan(ConanFile):
 
     @property
     def base_source_path(self):
+        '''
+        This is the path to the sources for this base package. When we are
+        building a subclassed package we need this to get access to the
+        exported data and template files.
+        '''
         if not hasattr(self, '_base_source_path_'):
             self._base_source_path_ = os.path.dirname(
                 os.path.abspath(__file__))
@@ -214,7 +219,7 @@ class BoostBaseConan(ConanFile):
 
     def get_b2_options(self):
         '''
-        The default for be_options is an empty dictionary, i.e. no key=value's.
+        The default for b2_options is an empty dictionary, i.e. no key=value's.
         '''
         return {}
 
@@ -230,6 +235,10 @@ class BoostBaseConan(ConanFile):
     #
 
     def initialize(self, settings, env):
+        '''
+        Initializes information about the libraries we are building, except
+        when we are packaging this base class.
+        '''
         if self.is_base:
             super(BoostBaseConan, self).initialize(settings, env)
         else:
@@ -270,6 +279,9 @@ class BoostBaseConan(ConanFile):
                         self.options[self.boost_cycle_group], option, value)
 
     def config_options(self):
+        '''
+        Gives the mixins a chance to edit package build options.
+        '''
         if self.is_base:
             pass
         else:
@@ -278,12 +290,14 @@ class BoostBaseConan(ConanFile):
 
     def requirements(self):
         '''
-        Calculates dependency requires to other Boost packages.
+        Calculates dependency requirements to other Boost packages.
         '''
         if self.is_base:
             pass
         else:
             self.boost_init()
+            # Expand out references to Boost inter-package (library)
+            # dependencies.
             for lib in self.boost_requires:
                 self.requires("{dep}/{ver}@{user}/{channel}".format(
                     dep='boost_'+lib,
@@ -291,6 +305,7 @@ class BoostBaseConan(ConanFile):
                     user=self.user,
                     channel=self.channel,
                 ))
+            # We need B2 if we are building any libraries in the package.
             if len(self.boost_libs_to_build) > 0:
                 self.requires("{dep}/{ver}@{user}/{channel}".format(
                     dep='boost_build',
@@ -310,6 +325,8 @@ class BoostBaseConan(ConanFile):
             pass
         else:
             self.boost_init()
+            # Expand out references to Boost inter-package (library)
+            # dependencies.
             for lib in self.boost_build_requires:
                 self.build_requires("{dep}/{ver}@{user}/{channel}".format(
                     dep='boost_'+lib,
@@ -389,6 +406,12 @@ class BoostBaseConan(ConanFile):
             self._build_lib(lib)
 
     def _write_jamroot_jam(self):
+        '''
+        Generates the `jamroot.jam` file at the root of the package build tree.
+        This jamfile contains most of the configuration, and patching magic,
+        to build the individual libraries.
+        '''
+        # TODO: Rewrite to use a less kludgy template system.
         content = load(os.path.join(
             self.base_source_path, 'src', 'template', 'jamroot.jam'))
         jam_include_paths = ' '.join(
@@ -423,13 +446,13 @@ class BoostBaseConan(ConanFile):
             .replace("{{{profile_flags}}}", self.b2_profile_flags)
         save(os.path.join(self.build_folder, 'jamroot.jam'), content)
 
-    def _write_boostcpp_jam(self):
-        content = load(os.path.join(
-            self.base_source_path, 'src', 'template',
-            'boostcpp-%s.jam' % (self.version)))
-        save(os.path.join(self.build_folder, 'boostcpp.jam'), content)
-
     def _write_project_config_jam(self):
+        '''
+        Generates the `project-config.jam` file at the root of the build tree.
+        This file contains the configuration that maps from the Conan provided
+        tool and packaged libraries to the B2 equivalent.
+        '''
+        # TODO: Rewrite to use a less kludgy template system.
         content = load(os.path.join(
             self.base_source_path, 'src', 'template', 'project-config.jam'))
         content = content \
@@ -457,6 +480,11 @@ class BoostBaseConan(ConanFile):
         save(os.path.join(self.build_folder, 'project-config.jam'), content)
 
     def _write_short_path_cmd(self):
+        '''
+        Copy the `short_path.cmd` script to where the B2 build script, the
+        `jamroot.jam` file, expects it during the build, i.e. to the root
+        of the build tree.
+        '''
         content = load(os.path.join(
             self.base_source_path, 'src', 'script', 'short_path.cmd'))
         save(os.path.join(self.build_folder, 'short_path.cmd'), content)
