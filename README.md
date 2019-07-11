@@ -186,3 +186,26 @@ section above.
 
 NOTE: It's possible to skip step 3 here. But that requires you do some
 extra git submodule commands to add to the existing super project repo.
+
+#### Testing Packages
+
+It's impractical to test the numerous Boost packages manually, one by one.
+Especially since we need to generate all the dependencies of a package.
+Instead we can use the `create_all.py` script to automate this step. The script
+will run through the packages available in dependency order and call
+`conan create <package> bincrafters/testing` minimizing the amount of package
+database rescanning and exports. To use invoke like this:
+
+```
+cd ./conan-boost
+python3 <conan_base_root>/src/script/create_all.py ++version=1.70.0 ++repo-dir=.
+```
+
+Which will locally build and test the packages with the default settings and
+options. You can check with other settings and options by adding options
+for them as regular `--` options. For example to test shared library building:
+
+```
+cd ./conan-boost
+python3 <conan_base_root>/src/script/create_all.py ++version=1.70.0 ++repo-dir=. "--options=*:shared=True"
+```
