@@ -120,7 +120,7 @@ stages:
     - bash: |
           set -e
           brew update
-          brew install python3
+          brew reinstall python3
       displayName: 'Install: Python 3.x'
     - bash: |
           set -e
