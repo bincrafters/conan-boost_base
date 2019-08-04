@@ -82,11 +82,15 @@ stages:
 
   - job: 'Windows'
     pool:
-      vmImage: 'windows-2019'
+      vmImage: $(VM_IMAGE)
     strategy:
       matrix:
         MSVC 2019:
           CONAN_SETTINGS_OPT: -s compiler=Visual Studio -s compiler.version=16
+          VM_IMAGE: 'windows-2019'
+        MSVC 2017:
+          CONAN_SETTINGS_OPT: -s compiler=Visual Studio -s compiler.version=15
+          VM_IMAGE: 'vs2017-win2016'
     steps:
     - task: UsePythonVersion@0
       inputs:
