@@ -86,10 +86,12 @@ stages:
     strategy:
       matrix:
         MSVC 2019:
-          CONAN_SETTINGS_OPT: -s compiler=Visual Studio -s compiler.version=16
+          CONAN_COMPILER: Visual Studio
+          CONAN_COMPILER_VERSION: 16
           VM_IMAGE: 'windows-2019'
         MSVC 2017:
-          CONAN_SETTINGS_OPT: -s compiler=Visual Studio -s compiler.version=15
+          CONAN_COMPILER: Visual Studio
+          CONAN_COMPILER_VERSION: 15
           VM_IMAGE: 'vs2017-win2016'
     steps:
     - task: UsePythonVersion@0
@@ -110,7 +112,7 @@ stages:
       displayName: 'Clone'
     - bash: |
           export "PYTHONHOME=${PYTHON3_PYTHONLOCATION}"
-          python ./src/script/create_all.py ++trace ++repo-dir=${HOME}/conan-boost ++version=${BOOST_VERSION} -s "compiler=Visual Studio" -s compiler.version=16 -o "*:python=python"
+          python ./src/script/create_all.py ++trace ++repo-dir=${HOME}/conan-boost ++version=${BOOST_VERSION} -s "compiler=${CONAN_COMPILER}" -s compiler.version=${CONAN_COMPILER_VERSION} -o "*:python=python"
       displayName: 'Create'
 
   - job: 'macOS'
